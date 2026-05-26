@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abdelaziz | Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; background: #0a0e27; color: #e2e8f0; }
+    .glass {
+      background: rgba(18, 26, 58, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-link { position: relative; transition: color 0.3s; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+      background: linear-gradient(90deg, #00d4ff, #7c3aed); transition: width 0.3s;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    .gallery-item {
+      position: relative; overflow: hidden; border-radius: 20px;
+      cursor: pointer; border: 1px solid rgba(0,212,255,0.1);
+      transition: all 0.4s ease;
+    }
+    .gallery-item:hover {
+      border-color: rgba(0,212,255,0.3);
+      transform: scale(1.02);
+      box-shadow: 0 20px 60px rgba(0,212,255,0.15);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.15); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,14,39,0.9) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; padding: 1.5rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(10,14,39,0.95);
+      z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90%; max-height: 90%; border-radius: 12px; object-fit: contain; border: 1px solid rgba(0,212,255,0.2); }
+    .lightbox-close {
+      position: absolute; top: 2rem; right: 2rem; color: white;
+      cursor: pointer; background: rgba(255,255,255,0.1); border-radius: 50%;
+      padding: 0.75rem; transition: background 0.3s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.12; pointer-events: none; }
+    @keyframes float { 0%,100%{transform:translate(0,0)} 50%{transform:translate(15px,-15px)} }
+    .animate-float { animation: float 7s ease-in-out infinite; }
+  </style>
+<base target="_blank">
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+  <div class="blob w-96 h-96 bg-cyan-400 top-0 right-0 animate-float"></div>
+  <div class="blob w-80 h-80 bg-pink-500 bottom-0 left-0 animate-float" style="animation-delay:3s"></div>
+
+  <nav class="glass sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold gradient-text">A.</a>
+      <div class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
+        <a href="index.html" class="nav-link hover:text-white">Home</a>
+        <a href="about.html" class="nav-link hover:text-white">About</a>
+        <a href="videos.html" class="nav-link hover:text-white">Videos</a>
+        <a href="gallery.html" class="nav-link active text-cyan-400">Gallery</a>
+        <a href="contact.html" class="nav-link hover:text-white">Contact</a>
+      </div>
+      <button class="md:hidden text-slate-300" onclick="toggleMenu()">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden glass border-t border-white/5">
+      <div class="px-6 py-4 flex flex-col gap-4">
+        <a href="index.html" class="text-slate-400 hover:text-white">Home</a>
+        <a href="about.html" class="text-slate-400 hover:text-white">About</a>
+        <a href="videos.html" class="text-slate-400 hover:text-white">Videos</a>
+        <a href="gallery.html" class="text-cyan-400 font-medium">Gallery</a>
+        <a href="contact.html" class="text-slate-400 hover:text-white">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="max-w-6xl mx-auto px-6 py-20">
+    <p class="text-xs uppercase tracking-widest text-cyan-400 mb-2 font-semibold">My Collection</p>
+    <h1 class="text-5xl font-bold mb-4">Photo Gallery</h1>
+    <p class="text-slate-400 mb-12 max-w-2xl">A collection of beautiful nature images that inspire me. Click any image to view full size.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Mountains">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Mountain Peaks</h3><p class="text-slate-300 text-sm">Majestic range at sunrise</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Beach">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Tropical Beach</h3><p class="text-slate-300 text-sm">Crystal clear waters</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80" alt="Forest">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Deep Forest</h3><p class="text-slate-300 text-sm">Sunlight through trees</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=80" alt="Foggy">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Misty Valley</h3><p class="text-slate-300 text-sm">Fog over green hills</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=600&q=80" alt="Waterfall">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Waterfall</h3><p class="text-slate-300 text-sm">Powerful cascade</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=80" alt="Lake">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Serene Lake</h3><p class="text-slate-300 text-sm">Mirror-like water</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80" alt="Trail">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Nature Trail</h3><p class="text-slate-300 text-sm">Path through wilderness</p></div>
+        </div>
+      </div>
+
+      <div class="gallery-item h-64" onclick="openLightbox('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80')">
+        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&q=80" alt="Sunset">
+        <div class="gallery-overlay">
+          <div><h3 class="text-white font-bold">Golden Sunset</h3><p class="text-slate-300 text-sm">Beautiful evening sky</p></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close"><i data-lucide="x" class="w-6 h-6"></i></div>
+    <img id="lightboxImg" src="" alt="Full size">
+  </div>
+
+  <footer class="glass border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <p class="font-bold text-white text-lg gradient-text">Abdelaziz</p>
+          <p class="text-sm text-slate-500">Born August 8, 2006 in Abu Dhabi, UAE</p>
+        </div>
+        <div class="flex gap-6 text-sm text-slate-500">
+          <a href="index.html" class="hover:text-cyan-400 transition">Home</a>
+          <a href="about.html" class="hover:text-cyan-400 transition">About</a>
+          <a href="videos.html" class="hover:text-cyan-400 transition">Videos</a>
+          <a href="gallery.html" class="hover:text-cyan-400 transition">Gallery</a>
+          <a href="contact.html" class="hover:text-cyan-400 transition">Contact</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-white/5 text-center text-xs text-slate-600">
+        <p> 2024 Abdelaziz — Level 4 Website Design & Development</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', (e) => { if(e.key==='Escape') closeLightbox(); });
+  </script>
+</body>
+</html>
